@@ -1,0 +1,20 @@
+{
+  "name": "TextReader",
+  "version": "1.0.0",
+  "description": "Reader for extra-large text files.",
+  "main": "index.js",
+  "scripts": {
+    "start": "electron .",
+    "build": "npm install && electron-packager ."
+  },
+  "author": "limitedeternity",
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "1.7.10"
+  },
+  "dependencies": {
+    "electron-packager": "^10.1.1",
+    "jquery": "^3.2.1",
+    "read-chunk": "^2.1.0"
+  }
+}
