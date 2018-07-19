@@ -13,7 +13,7 @@ app.on('ready', () => {
     window = new BrowserWindow({
         height: 390,
         width: 520,
-        resizable: false,
+        resizable: true,
         transparent: true
 
     });
