@@ -1,9 +1,9 @@
 <p align="center"><img src="logo/logotype_horizontal.png" alt="TextReader" height="140px"></p>
 
 
-> Reader for extra-large text files written on Electron.js
+> Electron-based reader for extra-large text files
 
-<br><br>
+<br>
 ## Screenshot
 
 ![Screenshot1](http://i64.tinypic.com/23u4ryf.png)
