@@ -1,7 +1,10 @@
 <p align="center"><img src="logo/logotype_horizontal.png" alt="TextReader" height="140px"></p>
 
+> Reading 1GB+ text files...? Speak no more!
 
-> Electron-based reader for extra-large text files
+<br>
+
+TextReader is an Electron-based utility for reading extra-large text files piece by piece. 
 
 <br>
 
