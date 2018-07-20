@@ -14,5 +14,5 @@
 
 ## Build
 
-`npm build`
+`npm run build`
 will output compiled executable, corresponding your current OS.
