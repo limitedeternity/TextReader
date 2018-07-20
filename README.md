@@ -4,6 +4,7 @@
 > Electron-based reader for extra-large text files
 
 <br>
+
 ## Screenshot
 
 ![Screenshot1](http://i64.tinypic.com/23u4ryf.png)
