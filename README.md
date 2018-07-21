@@ -6,7 +6,7 @@
 
 **TextReader** is an Electron-based utility for reading extra-large text files. 
 
-It reads files by small pieces (1000 bytes each) so you can take a peek into them without fully loading it to memory.
+It reads files by small pieces (1000 bytes each) so you can take a peek into them without loading to memory.
 
 <br>
 
