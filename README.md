@@ -20,7 +20,9 @@ It reads files by small pieces (1000 bytes each) so you can take a peek into the
 
 ## Building from source:
 
-* `npm run build-{mac|linux|win}`
+1) `npm ci`
+
+2) `npm run build-{mac|linux|win}`
 
 ## Meta
 
