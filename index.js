@@ -1,84 +1,96 @@
-const {app, BrowserWindow, ipcMain, dialog} = require('electron');
+const { app, BrowserWindow, ipcMain, dialog } = require('electron');
 const url = require('url');
 const path = require('path');
-const fs = require("fs");
+const fs = require('fs');
 const readChunk = require('read-chunk');
 
-var window = null;
-var openedFile = null;
-var fileSize = null;
-var startPos = 0;
+let mainWindow = null;
+let openedFile = null;
+let fileSize = null;
+let startPos = 0;
 
-app.on('ready', () => {
-    window = new BrowserWindow({
+function updateText(start) {
+    let input = readChunk.sync(openedFile, start, 1000);
+    let readFile = (input instanceof Uint8Array) ? input : new Uint8Array(input);
+    return readFile.toString();
+}
+
+function createMainWindow() {
+    let win = new BrowserWindow({
         height: 390,
         width: 520,
         resizable: true,
         transparent: true
-
     });
 
-    window.loadURL(url.format({
-      pathname: path.join(__dirname, 'app', 'index.html'),
-      protocol: 'file:',
-      slashes: true
-
+    win.loadURL(url.format({
+        pathname: path.join(__dirname, 'app', 'index.html'),
+        protocol: 'file:',
+        slashes: true
     }));
 
-});
+    win.on('closed', () => { mainWindow = null });
 
-const updateText = (start) => {
-  let input = readChunk.sync(openedFile, start, 1000);
-  let readFile = (input instanceof Uint8Array) ? input : new Uint8Array(input);
-  return readFile.toString();
+    return win;
 }
 
-ipcMain.on('close-main-window', (event) => {
-    app.quit();
+app.on('window-all-closed', (event) => {
+    if (process.platform !== 'darwin') {
+        app.quit();
+    }
+});
+
+app.on('activate', () => {
+    if (!mainWindow) {
+        mainWindow = createMainWindow();
+    }
+});
+
+app.on('ready', () => {
+    mainWindow = createMainWindow();
 });
 
 ipcMain.on('read-line', (event) => {
-  event.sender.send('store-line', updateText(startPos));
+    event.sender.send('store-line', updateText(startPos));
 });
 
 ipcMain.on('file-dialog', (event) => {
-  dialog.showOpenDialog({properties: ['openFile'], filters: [{name: 'Text', extensions: ['txt']}]},
-    (file) => {
-      if (file !== undefined) {
-        startPos = 0;
-        openedFile = file[0];
-        fileSize = fs.statSync(openedFile).size;
-        event.sender.send('open-success');
-      }
-    });
+    dialog.showOpenDialog({ properties: ['openFile'], filters: [{ name: 'Text', extensions: ['txt'] }] },
+        (file) => {
+            if (file !== undefined) {
+                startPos = 0;
+                openedFile = file[0];
+                fileSize = fs.statSync(openedFile).size;
+                event.sender.send('open-success');
+            }
+        });
 });
 
 ipcMain.on('update-line', (event, action) => {
-  switch (action) {
-    case 'increment':
+    switch (action) {
+        case 'increment':
+            if (startPos + 2000 < fileSize) {
+                startPos += 1000;
 
-      if (startPos + 2000 < fileSize) {
-        startPos += 1000;
+            } else if (startPos + 2000 > fileSize) {
+                startPos = fileSize - 2000;
+            }
 
-      } else if (startPos + 2000 > fileSize) {
-        startPos = fileSize - 2000;
-      }
+            break;
 
-      break;
+        case 'decrement':
+            if (startPos - 1000 > 0) {
+                startPos -= 1000;
 
-    case 'decrement':
-      if (startPos - 1000 > 0) {
-        startPos -= 1000;
+            } else {
+                startPos = 0;
+            }
 
-      } else {
-        startPos = 0;
-      }
+            break;
 
-      break;
+        default:
+            break;
+    }
 
-    default:
-      break;
-  }
-
-  event.sender.send('line-updated');
+    event.sender.send('line-updated');
 });
