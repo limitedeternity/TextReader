@@ -8,7 +8,7 @@ $(document).ready(() => {
   });
 
   ipcRenderer.on("store-line", (event, line) => {
-    $("#inputField").text(line);
+    $("#inputField").html(line);
 
     if (!$("#nextLine").is(":visible")) {
       $("#nextLine").show();

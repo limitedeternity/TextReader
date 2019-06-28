@@ -15,14 +15,26 @@ let startPos = 0;
 function updateText(start) {
   let input = readChunk.sync(openedFile, start, 1000);
   let readFile = input instanceof Uint8Array ? input : new Uint8Array(input);
-  return readFile.toString();
+
+  return readFile
+    .toString()
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;")
+    .split("\n")
+    .join("<br>");
 }
 
 function createMainWindow() {
   let win = new BrowserWindow({
     height: 390,
     width: 520,
-    resizable: true
+    resizable: true,
+    webPreferences: {
+      nodeIntegration: true
+    }
   });
 
   win.loadURL(
